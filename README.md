@@ -4,7 +4,7 @@ This repository serves as a template for creating Dockerized *data refinement in
 
 ## Overview
 
-Here is an overview of the data refinement process on Vana. 
+Here is an overview of the data refinement process on Vana.
 
 ![How Refinements Work](https://files.readme.io/25f8f6a4c8e785a72105d6eb012d09449f63ab5682d1f385120eaf5af871f9a2-image.png "How Refinements Work")
 
