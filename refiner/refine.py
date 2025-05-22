@@ -4,10 +4,11 @@ import os
 
 from refiner.models.offchain_schema import OffChainSchema
 from refiner.models.output import Output
-from refiner.transformer.user_transformer import UserTransformer
+# from refiner.transformer.user_transformer import UserTransformer
+from refiner.transformer.datapig_transfomer import DatapigTransformer
 from refiner.config import settings
 from refiner.utils.encrypt import encrypt_file
-from refiner.utils.ipfs import upload_file_to_ipfs, upload_json_to_ipfs
+from refiner.utils.ipfs_quicknode import upload_file_to_ipfs, upload_json_to_ipfs
 
 class Refiner:
     def __init__(self):
@@ -19,6 +20,7 @@ class Refiner:
         output = Output()
 
         # Iterate through files and transform data
+        print('settings.INPUT_DIR:', settings.INPUT_DIR)
         for input_filename in os.listdir(settings.INPUT_DIR):
             input_file = os.path.join(settings.INPUT_DIR, input_filename)
             if os.path.splitext(input_file)[1].lower() == '.json':
@@ -26,7 +28,7 @@ class Refiner:
                     input_data = json.load(f)
 
                     # Transform account data
-                    transformer = UserTransformer(self.db_path)
+                    transformer = DatapigTransformer(self.db_path)
                     transformer.process(input_data)
                     logging.info(f"Transformed {input_filename}")
                     
@@ -41,16 +43,17 @@ class Refiner:
                     output.schema = schema
                         
                     # Upload the schema to IPFS
-                    schema_file = os.path.join(settings.OUTPUT_DIR, 'schema.json')
-                    with open(schema_file, 'w') as f:
-                        json.dump(schema.model_dump(), f, indent=4)
-                        schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
-                        logging.info(f"Schema uploaded to IPFS with hash: {schema_ipfs_hash}")
+                    # schema_file = os.path.join(settings.OUTPUT_DIR, 'schema.json')
+                    # with open(schema_file, 'w') as f:
+                    #     json.dump(schema.model_dump(), f, indent=4)
+                    #     schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
+                    #     # ipfs_hash = upload_file_to_ipfs(schema_file)
+                    #     logging.info(f"Schema uploaded to IPFS with hash: {ipfs_hash}")
                     
                     # Encrypt and upload the database to IPFS
                     encrypted_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
                     ipfs_hash = upload_file_to_ipfs(encrypted_path)
-                    output.refinement_url = f"https://ipfs.vana.org/ipfs/{ipfs_hash}"
+                    output.refinement_url = f"https://datapig.quicknode-ipfs.com/ipfs/{ipfs_hash}"
                     continue
 
         logging.info("Data transformation completed successfully")

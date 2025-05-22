@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     )
     
     SCHEMA_NAME: str = Field(
-        default="Google Drive Analytics",
+        default="DataPig Crypto Preferences",
         description="Name of the schema"
     )
     
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     )
     
     SCHEMA_DESCRIPTION: str = Field(
-        default="Schema for the Google Drive DLP, representing some basic analytics of the Google user",
+        default="Schema for the DataPig DLP, representing the user crypto preferences over time",
         description="Description of the schema"
     )
     
@@ -50,7 +50,12 @@ class Settings(BaseSettings):
         default=None,
         description="Pinata API secret"
     )
-    
+
+    QUICKNODE_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Quicknode ipfs API secret"
+    )
+
     class Config:
         env_file = ".env"
         case_sensitive = True
